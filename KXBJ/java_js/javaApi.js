@@ -495,7 +495,7 @@ function removeAreaAngleRecord(areaId){
 			if(result.flag=="success"){
 				var btnFn = function(){
 					  window.location.href = 'areaAnalysis.html';
-					  return false;
+					  
 					}
 				easyDialog.open({
 					  container:{
@@ -504,12 +504,9 @@ function removeAreaAngleRecord(areaId){
 							 yesFn:btnFn,
 							 noFn:true
 						  },
-					  callback:function(){
-						     
-						  },
 					  //autoClose: 2000
 					});
-				
+				 return false;
 			}else{
 				easyDialog.open({
 					  container:{
@@ -517,6 +514,7 @@ function removeAreaAngleRecord(areaId){
 						  },
 					  autoClose:2000
 					});
+				return false;	
 			}
 		},
 		error: function (XMLHttpReuqest, textStautus, errothrown) {
