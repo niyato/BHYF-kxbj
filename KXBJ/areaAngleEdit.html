@@ -11,17 +11,10 @@
     <link rel="stylesheet" type="text/css" href="Content/css/theme.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="Content/css/lhgcalendar.css">
+    <link rel="stylesheet" type="text/css" href="css/easydialog.css">
     <script src="Content/Scripts/lhgcore.min.js"></script>
     <script src="Content/Scripts/lhgcalendar.min.js"></script>
 
-    <!--//活动柱状图-->
-    <script src="js/jquery-3.1.1.js"></script>
-    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
-    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
-    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
-    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
-    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
 
     <script src="js/jquery-2.1.4.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -127,11 +120,11 @@
 
                     </select>
                 </div>
-                <div class="areagenerate" style="float:left; margin-top:50px; margin-left:30px; cursor:pointer;">
-                    <span class="text" onclick="updateAreaAngleInfo()">修改</span>
+                <div class="areagenerate" style=" width:148px; height:38px;float:left; margin-top:50px; margin-left:30px; cursor:pointer;">
+                    <span style="display:block;width:148px; height:38px;" class="text" onclick="check_edit()">修改</span>
                 </div>
-                <div class="areacancel" style="float:left;margin-top:50px; margin-left:30px; cursor:pointer;">
-                    <span class="text" onclick="resetUpdate()">重置</span>
+                <div class="areacancel" style=" width:148px; height:38px;float:left;margin-top:50px; margin-left:30px; cursor:pointer;">
+                    <span style="display:block;width:148px; height:38px;" class="text" onclick="resetUpdate()">重置</span>
                 </div>
             </div>
         </div>
@@ -146,6 +139,7 @@
 <script src="js/activity-page.js"></script>
 <script src="js/javaApi.js"></script>
 <script src="java_js/javaApi.js"></script>
+<script src="Content/Scripts/easydialog.min.js"></script>
 <script type="text/javascript">
     bhyf.checkLogin();
 //    xhb.page.init();
@@ -178,6 +172,32 @@
     function resetUpdate(){
         queryConfigEditInfo();
     }
+	
+	//验证输入
+	function check_edit(){
+		   	var areaName_edit = $('#areaAngleName_edit').val();
+	        var classInfo_edit = $("#classInfoSelect_edit").find("option:selected").text();;
+			   if(areaName_edit.trim() == ''){
+					easyDialog.open({
+							container: {
+								content: '区角名称不能为空！',
+							},
+							autoClose: 2000
+						});
+					return false;	
+				 }
+	
+			  if(classInfo_edit == '请选择班级名称'){
+					easyDialog.open({
+					container: {
+						content: '班级名称名称不能为空！',
+					},
+					autoClose: 2000
+				});
+				return false;
+			  }
+			updateAreaAngleInfo();  
+		}
 </script>
 </body>
 </html>

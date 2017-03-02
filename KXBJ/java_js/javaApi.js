@@ -330,8 +330,9 @@ function updateAreaAngleInfo(){
 		var index=obj.selectedIndex; //序号，取当前选中选项的序号
 		baseName = obj.options[index].text;
 	}
-
-
+   
+    
+	
 	//var baseName=document.getElementById("baseStationSelect").text;
 	//alert(baseName);
 	$.ajax({
@@ -343,11 +344,28 @@ function updateAreaAngleInfo(){
 
 		success : function(result) {
 			console.log(result);
+		  
 			if(result.flag=="success"){
-				alert("更新成功！");
-				window.location.href = 'areaAnalysis.html';
+/*				alert("更新成功！");
+				window.location.href = 'areaAnalysis.html';*/
+				easyDialog.open({
+                    container: {
+                        content: '更新成功！',
+                    },
+                    autoClose: 2000,
+					callback:function(){
+						   window.location.href = 'areaAnalysis.html';
+						}
+                });
+				return false;
 			}else{
-				alert("更新失败！");
+				easyDialog.open({
+                    container: {
+                        content: '更新失败！',
+                    },
+                    autoClose: 2000
+                });
+				return false;
 			}
 
 		},
