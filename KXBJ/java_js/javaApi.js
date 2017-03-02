@@ -206,7 +206,14 @@ function recordAreaAngleInfo(){
                 });
                 return false;
 
-		    }
+		    }else{
+				  easyDialog.open({
+					     container:{
+							   content:'插入失败！',
+							 },
+						 autoClose:2000
+					  });
+				}
 		},
 		error: function (XMLHttpReuqest, textStautus, errothrown) {
 			console.log(XMLHttpRequest.status);
