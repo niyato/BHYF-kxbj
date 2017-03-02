@@ -493,10 +493,30 @@ function removeAreaAngleRecord(areaId){
 		success : function(result) {
 			console.log(result);
 			if(result.flag=="success"){
-				alert("删除成功！");
-				window.location.href = 'areaAnalysis.html';
+				var btnFn = function(){
+					  window.location.href = 'areaAnalysis.html';
+					  return false;
+					}
+				easyDialog.open({
+					  container:{
+						     header:'',
+						     content:'确定要删除此项吗？',
+							 yesFn:btnFn,
+							 noFn:true
+						  },
+					  callback:function(){
+						     
+						  },
+					  //autoClose: 2000
+					});
+				
 			}else{
-				alert("删除失败！");
+				easyDialog.open({
+					  container:{
+						     content:'删除失败！'
+						  },
+					  autoClose:2000
+					});
 			}
 		},
 		error: function (XMLHttpReuqest, textStautus, errothrown) {
