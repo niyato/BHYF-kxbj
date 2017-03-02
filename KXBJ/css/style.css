@@ -237,7 +237,7 @@ a{ text-decoration:none;}
 .applicationbox{box-shadow: 0 0px 5px #ddd; margin-top:30px;}
 .applicationbox th,.applicationbox td{ padding:10px; border-bottom:1px solid #D2DAE0; border-right:1px solid #D2DAE0;text-align:center;}
 .applicationbox th{ background:#e3e8ee; font-weight:bold; text-align:center;}
-.applicationbox td a{color:#4D5E70; text-decoration:underline;}
+.applicationbox td a{color:#5677fc;}
 .rightContentBox2 .applicationbox table tbody tr td .btn{background-image:url(../Content/css/images/button_icon.png); border:none; background-color:#FFF;}
 #att_1 table tbody tr td .btn{background-image:url(../Content/css/images/jsr.png); border:none;}
 .rightContentBox2{ padding:20px 30px;}
