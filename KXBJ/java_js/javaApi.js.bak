@@ -1,0 +1,97 @@
+//java 接口
+var url="192.168.1.153:8081/BflMark/";
+//var url=truelove.youjiaoyun.net/
+
+//查询区角配置信息
+function queryAreaAngleInfo(page){
+	var tbody = "";
+	var pageCount = "";
+	var gardenId=localStorage.getItem('gid');
+	
+  $.ajax({
+	
+	url : "http://"+url+"areaAngle/queryAreaAngleInfo?jsoncallback=?",
+	dataType : 'jsonp',
+	data : {page:page,pageSize:10,gardenId:2139},
+	jsonp : 'jsoncallback',
+	async: false,
+	
+	success : function(result) {
+		console.log(result);
+		
+		var resultData = result.areaAngle;
+
+		
+		//列表数据总数
+		var pageCount = result.allCount;
+		
+		//每页显示数据数
+		var pageSize = resultData.length;
+		
+		//页数
+		var page_Count = result.pageCount;
+			
+			$("#areaAngle_info tbody").empty();
+			
+			for(var i in resultData){
+
+				var areaType=resultData[i].areaType;
+				var typeName;
+				if(areaType==1){
+					typeName='班级区角-'+resultData[i].className;
+				}else{
+					typeName='公共区角-'+resultData[i].commonArea;
+				}
+				var baseName=resultData[i].baseName;
+				if(baseName==null){
+					baseName='--';
+				}
+				
+				
+				$("#areaAngle_info").append("<tr>"+             
+								"<td>"+resultData[i].areaName+"</td>"+
+								"<td>"+typeName+"</td>"+
+								"<td>"+resultData[i].angleType+"</td>"+
+								"<td>"+baseName+"</td>"+
+							   
+							   "<td>"+"<a class="ca" href="createArea.html"><span class="text">编辑</span></a>"+"</td>"+
+								"</tr>" );
+			}
+	
+	
+		  
+		 if(page_Count==1){
+				$("#divpage").empty();
+			  }else{
+				if(page < page_Count-1)
+				{
+					$("#divpage").pagination(pageCount, {
+						callback:pageselectCallback,
+						prev_text: '<< 上一页',
+						next_text: '下一页 >>',
+						items_per_page: pageSize,
+						num_display_entries: 10,
+						current_page: page,
+						num_edge_entries: 0
+				  });
+				}
+
+			  }
+		
+				  
+	},
+	error: function (XMLHttpReuqest, textStautus, errothrown) {
+		console.log(XMLHttpRequest.status);
+		console.log(XMLHttpReuqest.readyState);
+		console.log(XMLHttpRequest.responseText);
+		console.log(textStautus);
+		console.log(errothrown);
+	},
+	statusCode: {
+		404: function() {
+			 alert("page not found");
+			}
+	 }
+
+   });
+};
