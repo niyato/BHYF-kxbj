@@ -12,7 +12,7 @@ function queryAreaAngleInfo(page){
 	
 	url : "http://"+url+"areaAngle/queryAreaAngleInfo?jsoncallback=?",
 	dataType : 'jsonp',
-	data : {page:page,pageSize:10,gardenId:gardenId},
+	data : {page:page,pageSize:10,gardenId:2319},
 	jsonp : 'jsoncallback',
 	async: false,
 	
