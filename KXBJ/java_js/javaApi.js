@@ -1,6 +1,6 @@
 //java 接口
 var url="192.168.1.153:8081/BflMark/";
-//var url=truelove.youjiaoyun.net/
+//var url="truelove.youjiaoyun.net/";
 
 //查询区角配置信息
 function queryAreaAngleInfo(page){
@@ -12,7 +12,7 @@ function queryAreaAngleInfo(page){
 	
 	url : "http://"+url+"areaAngle/queryAreaAngleInfo?jsoncallback=?",
 	dataType : 'jsonp',
-	data : {page:page,pageSize:10,gardenId:2139},
+	data : {page:page,pageSize:10,gardenId:gardenId},
 	jsonp : 'jsoncallback',
 	async: false,
 	
@@ -106,7 +106,7 @@ function queryConfigCondition(){
 	$.ajax({
 		url : "http://"+url+"areaAngle/queryConfigCondition?jsoncallback=?",
 		dataType : 'jsonp',
-		data : {gardenId:2139},
+		data : {gardenId:gardenId},
 		jsonp : 'jsoncallback',
 		async: false,
 
@@ -242,7 +242,7 @@ function queryConfigEditInfo(){
 	$.ajax({
 		url : "http://"+url+"areaAngle/querySingleAreaAngleInfo?jsoncallback=?",
 		dataType : 'jsonp',
-		data : {gardenId:2139,areaId:areaId},
+		data : {gardenId:gardenId,areaId:areaId},
 		jsonp : 'jsoncallback',
 		async: false,
 
@@ -345,7 +345,7 @@ function updateAreaAngleInfo(){
 	$.ajax({
 		url : "http://"+url+"areaAngle/updateAreaAngleConfig?jsoncallback=?",
 		dataType : 'jsonp',
-		data : {gardenId:2139,areaId:areaId,areaName:areaName,areaType:areaType,classId:classId,commonArea:commonArea,angleTypeId:angleType,monitorId:monitorId,baseName:baseName},
+		data : {gardenId:gardenId,areaId:areaId,areaName:areaName,areaType:areaType,classId:classId,commonArea:commonArea,angleTypeId:angleType,monitorId:monitorId,baseName:baseName},
 		jsonp : 'jsoncallback',
 		async: false,
 
@@ -523,6 +523,244 @@ function removeAreaAngleRecord(areaId){
 					});
 				return false;	
 			}
+		},
+		error: function (XMLHttpReuqest, textStautus, errothrown) {
+			console.log(XMLHttpRequest.status);
+			console.log(XMLHttpReuqest.readyState);
+			console.log(XMLHttpRequest.responseText);
+			console.log(textStautus);
+			console.log(errothrown);
+		},
+		statusCode: {
+			404: function() {
+				alert("page not found");
+			}
+		}
+
+	});
+};
+
+
+//查询学生区角记录
+function queryStudentAreaAnlgeRecord(pageindx){
+    //alert(1);
+	var tbody = "";
+	var pageCount = "";
+	var gardenId=localStorage.getItem('gardenId');
+
+	var gradeNums=document.getElementById("activityGrade").value;
+	var classId=document.getElementById("activityClass").value;
+
+	var studentName=document.getElementById("activityStudent").value;
+
+	var angleTypeId=document.getElementById("activityStatus").value;
+
+	var startTime=document.getElementById("input1").value;
+
+	var endTime=document.getElementById("input2").value;
+
+	$.ajax({
+
+		url : "http://"+url+"areaAngle/gameStudentRecord?jsoncallback=?",
+		dataType : 'jsonp',
+		data : {page:pageindx,pageSize:10,gardenId:gardenId,gradeNum:gradeNums,classId:classId,studentName:studentName,angleTypeId:angleTypeId,startTime:startTime,endTime:endTime},
+		jsonp : 'jsoncallback',
+		async: false,
+		success : function(result) {
+			console.log(result);
+			//var rows="";
+			var resultData = result.studentAreaRecord;
+
+			//列表数据总数
+			var pageCount = result.allCount;
+
+			//每页显示数据数
+			var pageSize = resultData.length;
+
+			//页数
+			var page_Count = result.pageCount;
+
+
+
+			$("#studentAreaAngleRecord_table tbody").empty();
+
+			for(var i in resultData){
+
+				//alert(result.gameRecord[i].endTime);
+				var leaveTime=resultData[i].leaveTime;
+				var gradeNum=resultData[i].gradeNum;
+				var gradeName;
+				if(gradeNum==1){
+					gradeName='托班';
+				}else if(gradeNum==2){
+					gradeName='小班';
+				}else if(gradeNum==3){
+					gradeName='中班';
+				}else if(gradeNum==4){
+					gradeName='大班';
+				}
+				var second;
+				var minute;
+				var hear;
+				var time;
+				var allTime;
+				var second1;
+				var minute1;
+				var hear1;
+				var time1;
+				//for(var j in resultTime){
+				//	//alert(resultTime[j].areaName);
+				//	if(resultTime[j].areaName==resultData[i].area&&resultTime[j].personId==resultData[i].personId){
+				//		allTime=resultTime[j].allCountTime;
+				//		//alert(resultTime[j].allCountTime);
+				//	}
+                //
+				//}
+
+
+				if(leaveTime>=60){
+					second=leaveTime%60;
+					minute=parseInt(leaveTime/60);
+
+					if(minute>=60){
+						hear=parseInt(minute/60);
+						minute=minute%60;
+						time=hear+"时"+minute+"分"+second+"秒";
+					}else{
+						time=minute+"分"+second+"秒";
+					}
+
+				}else{
+					second=leaveTime;
+					time=second+"秒";
+				}
+				$("#studentAreaAngleRecord_table").append("<tr>"+
+
+					"<td>"+gradeName+"</td>"+
+					"<td>"+resultData[i].className+"</td>"+
+					"<td>"+resultData[i].studentName+"</td>"+
+
+					"<td>"+resultData[i].areaName+"</td>"+
+					"<td>"+resultData[i].startTime+"</td>"+
+					"<td>"+resultData[i].endTime+"</td>"+
+					"<td>"+time+"</td>"+
+					"<td>"+resultData[i].amount+"</td>"+
+
+					"<td>"+"<a class='video_link' href='" + resultData[i].filePath +"' data-width='640' data-height='360'><img src='Content/css/images/video-10.png' width='20' height='20'></a>"+"</td>"+
+					"</tr>" );
+			}
+
+			//$("#tblist").append(tbody);//添加到table
+			bindingHover();
+			if(pageindx < page_Count-1)
+			{
+				$("#divpage").pagination(pageCount, {
+					callback:pageselectCallback,
+					prev_text: '<< 上一页',
+					next_text: '下一页 >>',
+					items_per_page: pageSize,
+					num_display_entries: 10,
+					current_page: pageindx,
+					num_edge_entries: 0
+				});
+			}
+
+
+			//combine('tblist');
+
+		},
+		error: function (XMLHttpReuqest, textStautus, errothrown) {
+			console.log(XMLHttpRequest.status);
+			console.log(XMLHttpReuqest.readyState);
+			console.log(XMLHttpRequest.responseText);
+			console.log(textStautus);
+			console.log(errothrown);
+		},
+		statusCode: {
+			404: function() {
+
+				alert("page not found");
+			}
+		}
+
+	});
+
+};
+
+//查询班级条件信息
+function queryClassInfoByGrade(){
+
+	var gardenId=localStorage.getItem('gid');
+	var gradeNum=document.getElementById('activityGrade').value;
+
+
+	$.ajax({
+		url : "http://"+url+"areaAngle/queryClassInfoByGrade?jsoncallback=?",
+		dataType : 'jsonp',
+		data : {gardenId:gardenId,gradeNum:gradeNum},
+		jsonp : 'jsoncallback',
+		async: false,
+
+		success : function(result) {
+			console.log(result);
+
+			var classInfo = result.classInfo;
+
+
+			//根据id查找对象，班级
+			var obj1=document.getElementById('activityClass');
+			for(var i in classInfo){
+
+				//添加一个选项
+				obj1.add(new Option(classInfo[i].className,classInfo[i].classId));
+			}
+
+		},
+		error: function (XMLHttpReuqest, textStautus, errothrown) {
+			console.log(XMLHttpRequest.status);
+			console.log(XMLHttpReuqest.readyState);
+			console.log(XMLHttpRequest.responseText);
+			console.log(textStautus);
+			console.log(errothrown);
+		},
+		statusCode: {
+			404: function() {
+				alert("page not found");
+			}
+		}
+
+	});
+};
+
+//查询班级条件信息
+function queryAllAreaAngleType(){
+
+	//var gardenId=localStorage.getItem('gid');
+
+	$.ajax({
+		url : "http://"+url+"areaAngle/queryAllAreaAngleType?jsoncallback=?",
+		dataType : 'jsonp',
+		data : {},
+		jsonp : 'jsoncallback',
+		async: false,
+
+		success : function(result) {
+			console.log(result);
+
+
+			var areaAngleType = result.areaAngleType;
+
+
+
+			//根据id查找对象，区角类型
+			var obj2=document.getElementById('activityStatus');
+			for(var i in areaAngleType){
+
+				//添加一个选项
+				obj2.add(new Option(areaAngleType[i].angleType,areaAngleType[i].angleTypeId));
+			}
+
+
 		},
 		error: function (XMLHttpReuqest, textStautus, errothrown) {
 			console.log(XMLHttpRequest.status);

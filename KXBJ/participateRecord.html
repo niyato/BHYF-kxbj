@@ -22,15 +22,12 @@
      <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
      <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
      <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
-	
-    <script src="js/jquery-2.1.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/iscroll.js"></script>
-    <script src="js/moment.min.js" ></script>
-    <script src="js/underscore-min.js" ></script>
-    <script src="js/services.js" ></script>
-    <script src="js/graph.js" ></script>
-    <script src="js/activity-zztu.js"></script>
+
+    <!--预览视频-->
+    <link rel="stylesheet" type="text/css" href="css/jquery.fancybox.css">
+    <link rel="stylesheet" type="text/css" href="css/lanrenzhijia.css">
+    
+
     <style type="text/css">
         #line-chart {
             height: 300px;
@@ -42,9 +39,7 @@
             color: #fff;
         }
     </style>
-    <!--分页-->
-    <link rel="stylesheet" type="text/css" href="Content/css/pagination.css">
-    <script src="Content/Scripts/jquery.pagination.js"></script>
+    
     <style type="text/css">
         .demo1{
             height:20px;
@@ -95,7 +90,7 @@
 					   
 						<div class="" style="float:left;">    
 							<label>年级选择</label>
-							<select id="activityGrade" style="text-align:center; width:237px; height:30px;border:1px solid lightgrey; border-radius:5px; ">
+							<select id="activityGrade" onchange="queryClassInfoByGrade()" style="text-align:center; width:237px; height:30px;border:1px solid lightgrey; border-radius:5px; ">
 								<option value="0">全部年级</option>
 								<option value="1">托班</option>
 								<option value="2">小班</option>
@@ -112,14 +107,14 @@
 						</div>
 						<div class="" style="">
 							<label>学生姓名</label>
-							<input type="text" style=" width:237px; height:30px;border:1px solid lightgrey; border-radius:5px;" value="" placeholder="支持对姓名的模糊搜索" />
+							<input id="activityStudent" type="text" style=" width:237px; height:30px;border:1px solid lightgrey; border-radius:5px;" value="" placeholder="支持对姓名的模糊搜索" />
 						</div>
                         <br/>
 						<div class="" style="">
 							<label>区角选择</label>
 							<select id="activityStatus" style="width:237px; height:30px; border-radius:5px; border:1px solid lightgrey; text-align:center">
-								<option value="">绘本阅读区角</option>
-								<option value="">手工建构区角</option>
+								<option value="0">请选择区角类型</option>
+
 							</select>
 						</div>
 						 <div class="" id="activityDate" style=" margin-top:30px;">
@@ -127,7 +122,7 @@
 							<input type="text" style="border:1px solid lightgrey; border-radius:10px; text-align:center;" id="input1" readonly onchange="" value="" placeholder="开始时间" /> -- <input type="text" style="border:1px solid lightgrey; border-radius:10px; text-align:center;" id="input2" readonly onchange="" value="" placeholder="结束时间" />
 						</div>    
 						<div class="" style="width:123px; height:38px; border-radius:5px; background-color:#2baf2b; border-color:#0a8f08; float:right; margin-top: -30px;">
-							<input type="button" id="select" style=" width:123px; height:38px; border-radius:5px; background-color:#2baf2b; border-color:#0a8f08; color:#FFF;" onclick="" value="搜索"  />
+							<input type="button" id="select" style=" width:123px; height:38px; border-radius:5px; background-color:#2baf2b; border-color:#0a8f08; color:#FFF;" onclick="queryRecord()" value="搜索"  />
 						</div>   
 					</div>
 				</div>
@@ -136,7 +131,7 @@
         
 
         <div class="applicationbox" style="text-align:center;">
-            <table width="100%" border="0" cellspacing="0" class="accTabbox" id="tblist">
+            <table width="100%" border="0" cellspacing="0" class="accTabbox" id="studentAreaAngleRecord_table">
                 <thead >
                     <tr id="topic">
                         <th scope="col">年级名称</th>
@@ -147,7 +142,7 @@
                         <th scope="col">离开时间</th>
                         <th scope="col">停留时长</th>
                         <th scope="col">运动量</th>
-                        <th scope="col">操作</th>
+                        <th scope="col">视频预览</th>
                     </tr>
                 </thead>
                 <tbody >  
@@ -155,31 +150,10 @@
                 </tbody>
                 
             </table>
-            <span id="selectdata" hidden="hidden" style="font-size:18px;">暂无数据</span>    
+            <span id="selectdata" hidden="hidden" style="font-size:18px;">暂无数据</span>
             <input type="hidden" id="pagenum">
         </div>
-        <!-- 日数据模态框（Modal） -->
-        <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="width:900px;">
-                <div class="modal-content" style=" height:700px;">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            &times;
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span style=" font-weight:bold;"></span>小朋友体育活动柱状图
-                        </h4>
-                    </div>
-                    <div class="modal-body" style=" width:800px; height:500px;">
-                         <div id="activity-container" style=" width:800px; height:500px;"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                        </button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal -->
-        </div>
+
         <!--分页-->
         <div id="divpage" class="flickr" style="text-align:right"></div>
     </div>
@@ -187,31 +161,61 @@
     
     
 
-    <script src="js/check-login.js" ></script>
-    <script src="js/activity-page.js"></script>
-    <script src="js/javaApi.js"></script>
-    <script type="text/javascript">
+</body>
+</html>
+
+<script src="js/check-login.js" ></script>
+<script src="js/moment.min.js" ></script>
+<script src="js/underscore-min.js" ></script>
+<!-- <script src="js/services.js" ></script> -->
+<script src="js/graph.js" ></script>
+<script src="js/activity-zztu.js"></script>
+<script src="java_js/javaApi.js"></script>
+
+<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/iscroll.js"></script>
+
+<script src="js/jquery-1.3.2.min.js"></script>
+<script src="js/flowplayer-3.1.1.min.js"></script>
+<script src="js/jquery.fancybox-1.2.1.pack.js"></script>
+<script src="js/jquery.easing.1.3.js"></script>
+<script src="js/fancyplayer.js"></script>
+
+<!--分页-->
+<link rel="stylesheet" type="text/css" href="Content/css/pagination.css">
+<script src="Content/Scripts/jquery.pagination.js"></script>
+
+
+
+<script type="text/javascript">
     bhyf.checkLogin();
-    xhb.page.init();
+    //    xhb.page.init();
 
     var page_id = 0;     //页面索引初始值
     var pageSize = 10;
+    $(function () {        
+	    queryAllAreaAngleType();
+        queryClassInfoByGrade();
+
+    });
     
-    $(function () {	
-        var current=CurentTime();
-        document.getElementById("J-xl_start").value=current;
- 
-    });
+	var videopath = "";
+	var swfplayer = videopath + "videos/flowplayer-3.1.1.swf";
 	
-	J(function () {
+    function queryRecord(){
+//        alert(1);
+        queryStudentAreaAnlgeRecord(page_id);
+    }
+    J(function () {
         J('#input1').calendar({ maxDate:'#input2'});
-		J('#input2').calendar({ minDate:'#input1'});
+        J('#input2').calendar({ minDate:'#input1'});
     });
-	
-	 function opcal() {
+
+    function opcal() {
         J.calendar.Show();
     }
-	
+
     function CurentTime()
     {
         var now = new Date();
@@ -228,22 +232,70 @@
         clock += day + " ";
         return(clock);
     };
-        
+
     //翻页响应
-      function pageselectCallback(page_id, jq){
-          var current=document.getElementById("J-xl_start").value;
-                initData_activity(page_id,current);
-                //return false;
-          
-     }
-   
-     function backhome(){
-		    window.location.href = 'Homepage.html';
-			localStorage.removeItem('pid');
-			localStorage.removeItem('gname');
-			localStorage.removeItem('tname');
-			localStorage.removeItem('picurl');
-		 }
-    </script>
-</body>
-</html>
+    function pageselectCallback(page_id, jq){
+
+        queryStudentAreaAnlgeRecord(page_id);
+        //return false;
+
+    }
+    //预览视频的绑定事件
+    function bindingHover(){
+        var videoclip='';
+        var player='';
+        var swfplayer = "videos/flowplayer-3.1.1.swf";
+        $(".video_link").hover(function(){
+                    videoclip=$(this).attr('href');
+                    $(this).attr({"href":"#video_box"});
+                },
+
+                function(){
+                    $(this).attr({"href":""+videoclip+""});
+                });
+        $(".video_link").fancybox({
+            'hideOnContentClick':false,
+            'overlayOpacity' :0.6,
+            'zoomSpeedIn'    :400,
+            'zoomSpeedOut'   :400,
+            'easingIn'		 : 'easeOutBack',
+            'easingOut'		 : 'easeInBack',
+            'callbackOnShow' :function(){
+                player = $f("fancy_div",swfplayer,{
+                    play:{opacity:0},
+                    clip:{
+                        autoPlay:true,
+                        autoBuffering:true,
+                        url:videopath+videoclip+'',
+                        onStart:function(clip){
+                            var wrap=jQuery(this.getParent());
+                            var clipwidth = clip.metaData.width;
+                            var clipheight= clip.metaData.height;
+                            var pos = $.fn.fancybox.getViewport();
+                            $("#fancy_outer").css({width:clipwidth,height:clipheight});
+                            $("#fancy_outer").css('left', ((clipwidth + 36) > pos[0] ? pos[2] : pos[2] + Math.round((pos[0] - clipwidth	- 36)	/ 2)));
+                            $("#fancy_outer").css('top',  ((clipheight + 50) > pos[1] ? pos[3] : pos[3] + Math.round((pos[1] - clipheight - 50)	/ 2)));
+                        },
+                        onFinish:function(){
+                            $('#fancy_close').trigger('click');
+                        }
+                    }
+                });
+                player.load();
+                $('#fancy_close').click(function(){
+                    $("#fancy_div_api").remove();
+                });
+            },
+            'callbackOnClose':function(){
+                $("#fancy_div_api").remove();
+            }
+        });
+    }
+    function backhome(){
+        window.location.href = 'Homepage.html';
+        localStorage.removeItem('pid');
+        localStorage.removeItem('gname');
+        localStorage.removeItem('tname');
+        localStorage.removeItem('picurl');
+    }
+</script>
